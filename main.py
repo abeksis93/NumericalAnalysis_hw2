@@ -1,16 +1,19 @@
-# This is a sample Python script.
+import math
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+import gaussian as gaussian
+import matplotlib as plt
+import numpy as np
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def gaussian(x, var, miu):
+    return 1 / (math.sqrt(var * 2 * math.pi)) * np.exp(-0.5 * np.power((x - miu), 2)/var)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+def g(X, m, ul, r, w, d, miu):
+    index = 0
+    gResult = 1
+    for x in X:
+        gResult *= r*gaussian(x, w*ul, miu[index])
+        index += 1
+
+
