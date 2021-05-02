@@ -25,6 +25,7 @@ def g(X,m,ul,r,w,d,miu):
     for x in X:
         gResult *= gaussian(x,w*ul,miu[index])
         index+=1
+    return gResult
 
 def G(X,m,ul,r,w,d,miu,Wi):
     """
@@ -37,6 +38,18 @@ def G(X,m,ul,r,w,d,miu,Wi):
     miu- list of  an average point of an n dimensional Gaussian distribution function
     Wi - list of m+1 weights for each g_i
     """
+    lst = []
+    for i in range(0,m+1):
+        lst.append(Wi*g(X,m,ul,r,w,d,miu))
 
+    return max(lst)
 
-
+nList=[5, 10, 20, 40]
+mList=[0, 5, 10, 20]
+ulList=[10, 20, 30, 40]
+rList = [0.1, 0.3, 0.6, 0.9]
+w = [0.01, 0.03, 0.06, 0.09]
+d = [0.25, 0.5, 0.75, 1.0]
+Gaussians=[]
+for n in nList:
+    Gaussians.append(G(n,mList[1],ulList[1],rList1[1],wList[1],dList[1]))
