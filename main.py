@@ -8,8 +8,8 @@ from scipy.signal.windows import gaussian
 from scipy.stats import multivariate_normal
 
 
-def g(x, var, miu):
-    return 1 / (math.sqrt(var * 2 * math.pi)) * np.exp(-0.5 * np.power((x - miu), 2)/var)
+# def g(x, var, miu):
+#     return 1 / (math.sqrt(var * 2 * math.pi)) * np.exp(-0.5 * np.power((x - miu), 2)/var)
 
 
 def multi_dimensional_gaussian(variables,variance_list,miu_list):
@@ -23,11 +23,11 @@ def multi_dimensional_gaussian(variables,variance_list,miu_list):
     miu- list of  an average point of an n dimensional Gaussian distribution function
     """
 
-    index = 0
+
     g_result=1
-    for x in variables:
+    for index, x in enumerate(variables):
         g_result *= multivariate_normal.pdf(x,variance_list[index],miu_list[index])
-        index += 1
+
     return g_result
 
 def G(m,Wi,variables,variance_list,miu_list):  #todo: set peaks in d range
@@ -46,7 +46,7 @@ def G(m,Wi,variables,variance_list,miu_list):  #todo: set peaks in d range
     for i in range(0,m+1):
         lst.append(Wi[i]*multi_dimensional_gaussian(variables,miu_list,variance_list))
 
-    return lst[2] #not good
+    return lst#not good
 
 nList = [5, 10, 20, 40]
 mList=[0, 5, 10, 20]
@@ -75,7 +75,7 @@ w=wList[1]
 d = dList[1]
 for i in range(0,6):
     Wlist.append(random.random()*r)
-#change-
+
 var = []
 var.append(variance[ulList.index(ul)][wList.index(w)])
 var.append(variance[1][2])
@@ -89,5 +89,10 @@ z=G(m,Wlist,variables,var,miu_list)
 #plot
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
-ax.plot3D(variables[0],variables[1],z,'green')
+for i in z:
+    x=variables[0]*10*random.random()
+    y=variables[1]*10*random.random()
+    ax.plot3D(x,y, i, 'green')
+
+# ax.plot3D(variables[0],variables[1],z,'green')
 plt.show()
