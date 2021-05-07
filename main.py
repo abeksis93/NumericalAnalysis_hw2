@@ -6,13 +6,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal.windows import gaussian
 from scipy.stats import multivariate_normal
+from mpl_toolkits import mplot3d
 
 
-# def g(x, var, miu):
-#     return 1 / (math.sqrt(var * 2 * math.pi)) * np.exp(-0.5 * np.power((x - miu), 2)/var)
 
 
-def multi_dimensional_gaussian(variables,variance_list,miu_list):
+def g(x, var, miu):
+    return 1 / (math.sqrt(var * 2 * math.pi)) * np.exp(-0.5 * np.power((x - miu), 2)/var)
+
+
+def multivar_gaussian(variables,variance_list,miu_list):
     """
     X-list of decision variables
     m- Number of local optima
@@ -23,12 +26,16 @@ def multi_dimensional_gaussian(variables,variance_list,miu_list):
     miu- list of  an average point of an n dimensional Gaussian distribution function
     """
 
+    matrix = [[]*len(variables[0])]*len(variables[0])
 
-    g_result=1
-    for index, x in enumerate(variables):
-        g_result *= multivariate_normal.pdf(x,variance_list[index],miu_list[index])
+    for i in range(0,len(variables[0])):
+        for j in range(0,len(variables[0])):
+            g_x1 = multivariate_normal(variables[0][i], variance_list[0], miu_list[0])
+            g_x2 = multivariate_normal(variables[0][j], variance_list[0], miu_list[0])
+            matrix[i].append(g_x1.abseps*g_x2.abseps)
 
-    return g_result
+
+    return matrix
 
 def G(m,Wi,variables,variance_list,miu_list):  #todo: set peaks in d range
     """
@@ -41,12 +48,25 @@ def G(m,Wi,variables,variance_list,miu_list):  #todo: set peaks in d range
     miu- list of  an average point of an n dimensional Gaussian distribution function
     Wi - list of m+1 weights for each g_i
     """
+    g_lst=[]
+    for g in range(m+1):
+        for i in range(0, len(variables[0])):
+            for j in range(0, len(variables[0])):
+                g_lst.append(multivar_gaussian(variables,variance_list,miu_list))
+                g_lst[g][i][j] = g_lst[g][i][j]*Wi[g];
 
-    lst = []
-    for i in range(0,m+1):
-        lst.append(Wi[i]*multi_dimensional_gaussian(variables,miu_list,variance_list))
 
-    return lst#not good
+
+    max_matrix = [[]*len(variables[0])]*len(variables[0])
+    valueList=[]
+    for i in range(0, len(variables[0])):
+        for j in range(0, len(variables[0])):
+            for g in range(0,m+1):
+                valueList.append(g_lst[g][i][j])
+
+        max_matrix[i].append(max(valueList))
+
+    return max_matrix
 
 nList = [5, 10, 20, 40]
 mList=[0, 5, 10, 20]
@@ -81,18 +101,18 @@ var.append(variance[ulList.index(ul)][wList.index(w)])
 var.append(variance[1][2])
 variables = []
 for i in range(0, n):
-    variables.append(np.linspace(-ul / 2, ul / 2, 100))
+    variables.append(np.linspace(-ul / 2, ul / 2, 200))
 
 #function
 z=G(m,Wlist,variables,var,miu_list)
 
 #plot
 fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
-for i in z:
-    x=variables[0]*10*random.random()
-    y=variables[1]*10*random.random()
-    ax.plot3D(x,y, i, 'green')
 
-# ax.plot3D(variables[0],variables[1],z,'green')
+x,y=np.meshgrid(variables[0],variables[1])
+
+zArray = np.array(z)
+
+ax =plt.axes(projection='3d')
+ax.plot_surface(x,y,zArray)
 plt.show()
