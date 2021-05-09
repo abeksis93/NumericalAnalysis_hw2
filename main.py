@@ -95,13 +95,13 @@ for i in range(0, 6):
 
 variance_list = []
 for i in range(0, m + 1):
-    miu_list.append([random.random(), random.random()])
+    miu_list.append([random.randrange(-(ul/2)*d,(ul/2)*d), random.randrange(-(ul/2)*d,(ul/2)*d)])
     variance_list.append([np.random.uniform(0, ulList[random.randint(0, 3)] * wList[random.randint(0, 3)]),
                           np.random.uniform(0, ulList[random.randint(0, 3)] * wList[random.randint(0, 3)])])
 
 variables = []
 for i in range(0, n):
-    variables.append(np.linspace(-ul / 2, ul / 2, 500))
+    variables.append(np.linspace(-ul / 2, ul / 2, 1000))
 
 # function
 z = G(m, Wlist, variables, variance_list, miu_list)
@@ -113,11 +113,11 @@ x, y = np.meshgrid(variables[0], variables[1])
 # pos = np.empty(x.shape + (2,))
 # pos[:, :, 0] = x
 # pos[:, :, 1] = y
-print(z([1,2]))
+# print(z([1,2]))
 
 pos=np.dstack((x, y))
-z1=z(pos)
-print(z1)
+# z1=z(pos)
+# print(z1)
 ax =fig.add_subplot(projection='3d')
 ax.plot_surface(x,y, z(pos), cmap='viridis', linewidth=0)
 plt.show()
