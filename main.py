@@ -5,37 +5,9 @@ import random
 import matplotlib.pyplot as plt
 import numpy
 import numpy as np
-from mealpy.math_based.HC import BaseHC
-from mealpy.swarm_based.GWO import BaseGWO
+from mealpy.math_based.HC import BaseHC, OriginalHC
+from mealpy.swarm_based.GWO import BaseGWO, RW_GWO
 from scipy.stats import multivariate_normal
-
-
-def g(x, var, miu):
-    return 1 / (math.sqrt(var * 2 * math.pi)) * np.exp(-0.5 * np.power((x - miu), 2) / var)
-
-
-def multivar_gaussian(variables, variance_list, miu_list):
-    """
-    X-list of decision variables
-    m- Number of local optima
-    ul-Interval span of side constraints
-    r - Ratio of local optima to global optima(=1)
-    w- w*ul is the variance
-    d- all peaks must be in range [-d*ul/2,d*ul/2]
-    miu- list of  an average point of an n dimensional Gaussian distribution function
-    """
-
-    matrix = []
-    col = []
-
-    for i in range(0, len(variables[0])):
-        for j in range(0, len(variables[0])):
-            g_x1 = g(variables[0][i], variance_list[0], miu_list[0])
-            g_x2 = g(variables[1][j], variance_list[1], miu_list[1])
-            col.append(g_x1 * g_x2)
-        matrix.append(col)
-
-    return matrix
 
 
 def G(m, variance_list, miu_list):
@@ -59,7 +31,7 @@ def G(m, variance_list, miu_list):
 
 
     return lambda x: sum(
-        r * (1 - 0.05 * i) * g_lst[i].pdf(x) if g_lst[i] != f else f.pdf(x) / max_val for i in range(m + 1))
+        r * (1 - 0.05 * (i+1)) * g_lst[i].pdf(x) if g_lst[i] != f else f.pdf(x) / max_val for i in range(m + 1))
 
 
 nList = [5, 10, 20, 40]
@@ -101,11 +73,11 @@ x, y = np.meshgrid(variables[0], variables[1])
 
 
 pos=np.dstack((x, y))
-# z1=z(pos)
+z1=z(pos)
 # print(np.amax(z1))
 #
 ax = fig.add_subplot(projection='3d')
-ax.plot_surface(x,y, z(pos), cmap='viridis', linewidth=0)
+ax.plot_surface(x,y, z1, cmap='viridis', linewidth=0)
 # plt.show()
 
 F = lambda x:-z(x)
@@ -116,7 +88,7 @@ lb = [-ul / 2] * n
 ub = [ul / 2] * n
 # _____1.b______
 np.random.seed(12)
-hc = BaseHC(F, ub=ub, lb=lb, epoch=10, problem_size=2)
+hc = OriginalHC(F, ub=ub, lb=lb, epoch=10, problem_size=n)
 best_pos1, best_fit1, list_loss1 = hc.train()
 print("best_pos: ")
 print(best_pos1)
@@ -131,7 +103,7 @@ for i in list_loss1:
 # 1.c
 
 print("1c")
-gwo = BaseGWO(obj_func=F, lb=lb, ub=ub, epoch=10, problem_size=2)
+gwo = RW_GWO(obj_func=F, lb=lb, ub=ub, epoch=10, problem_size=n)
 best_pos1, best_fit1, list_loss1 = gwo.train()
 print("best_pos: ")
 print(best_pos1)
@@ -160,7 +132,7 @@ lb = [-ul / 2] * n
 ub = [ul / 2] * n
 # _____hc______
 np.random.seed(12)
-hc = BaseHC(F, ub=ub, lb=lb, epoch=50, problem_size=10)
+hc = OriginalHC(F, ub=ub, lb=lb, epoch=50, problem_size=n)
 best_pos1, best_fit1, list_loss1 = hc.train()
 print("best_pos: ")
 print(best_pos1)
@@ -172,7 +144,7 @@ for i in list_loss1:
     print(i)
 
 # ____gwo____
-gwo = BaseGWO(obj_func=F, lb=lb, ub=ub, epoch=50, problem_size=10)
+gwo = RW_GWO(obj_func=F, lb=lb, ub=ub, epoch=50, problem_size=n)
 best_pos1, best_fit1, list_loss1 = gwo.train()
 print("best_pos: ")
 print(best_pos1)
