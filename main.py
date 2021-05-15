@@ -116,7 +116,7 @@ ax = fig.add_subplot(projection='3d')
 ax.plot_surface(x, y, z(pos), cmap='viridis', linewidth=0)
 plt.show()
 
-F = lambda x:-z(x)
+F = lambda x: -z(x)
 
 # ____define objective function___
 lb = [-ul / 2] * n
@@ -140,7 +140,10 @@ arrIteration = []
 for i in range(10):
     arrZ.append(float(arrZin1[i][1]))
     arrIteration.append(i)
-plt.scatter(arrZ, arrIteration)
+plt.scatter(arrZ, arrIteration, c='purple')
+plt.xlabel("X is best fit value")
+plt.ylabel("Y is number of iteration")
+plt.title("1b - Hill Climber 2D")
 plt.show()
 
 # ____1.c____
@@ -162,27 +165,44 @@ arrIteration = []
 for i in range(10):
     arrZ.append(float(arrZin1[i][1]))
     arrIteration.append(i)
-plt.scatter(arrZ, arrIteration)
+plt.scatter(arrZ, arrIteration, c='green')
+plt.xlabel("X is best fit value")
+plt.ylabel("Y is number of iteration")
+plt.title("1c - Grey Wolf Optimizer 2D")
 plt.show()
 
 
 # ___1.d___
 print("1d")
+nList = [5, 10, 20, 40]
+mList = [0, 5, 10, 20]
+rList = [0.1, 0.3, 0.6, 0.9]
+ulList = [10, 20, 30, 40]
+wList = [0.01, 0.03, 0.06, 0.09]
+dList = [0.25, 0.5, 0.75, 1.0]
 
-n = 10
+# parameter choose:
+n = nList[1]
+m = mList[1]
+ul = ulList[1]
+r = rList[1]
+w = wList[1]
+d = dList[1]
+Wlist = []
+for i in range(0, 6):
+    Wlist.append(random.random() * r)
+
 miu_list = []
 variance_list = []
-for i in range(m+1):
-    var = [np.random.uniform(w*ul/10, w*ul) for i in range(n)]
-    miu = [np.random.uniform(-d*ul/2, d*ul/2) for i in range(n)]
-    miu_list.append(miu)
-    variance_list.append(var)
 
+for i in range(0, m + 1):
+    miu_list.append([np.random.uniform(-d*ul/2, d*ul/2) for i in range(n)])
+    variance_list.append([np.random.uniform(w*ul/10, w*ul) for i in range(n)])
 
 z = G(m, variance_list, miu_list)
-F = lambda x:-z(x)
-lb = [-ul / 2]
-ub = [ul / 2] * n
+F = lambda x: -z(x)
+lb = [-10.02] * n
+ub = [10.02] * n
 # _____hc______
 np.random.seed(12)
 old_stdout = sys.stdout
@@ -201,16 +221,50 @@ arrIteration = []
 for i in range(50):
     arrZ.append(float(arrZin1[i][1]))
     arrIteration.append(i)
-plt.scatter(arrZ, arrIteration)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("1d - Hill Climber 10D")
 plt.show()
 
+
+lb = [-7] * n
+ub = [6.0001] * n
 # ____gwo____
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
 gwo = BaseGWO(obj_func=F, lb=lb, ub=ub, epoch=50, problem_size=10)
 best_pos1, best_fit1, list_loss1 = gwo.train()
-print("best_pos: ")
-print(best_pos1)
-print("best_fit: ")
-print(best_fit1)
-print("list_loss: ")
-for i in list_loss1:
-    print(i)
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(50)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(50)]
+arrZ = []
+arrIteration = []
+for i in range(50):
+    arrZ.append(float(arrZin1[i][1]))
+    print(arrZ[i])
+    arrIteration.append(i)
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='orange')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("1d - Grey Wolf Optimizer 10D")
+plt.show()
