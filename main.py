@@ -8,6 +8,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mealpy.math_based.HC import BaseHC, OriginalHC
 from mealpy.swarm_based.GWO import BaseGWO
+from mealpy.swarm_based.PSO import BasePSO
+from mealpy.swarm_based.EHO import BaseEHO
+from mealpy.swarm_based.WOA import BaseWOA
+from mealpy.physics_based.SA import BaseSA
+
 from scipy.stats import multivariate_normal
 
 
@@ -267,4 +272,458 @@ plt.scatter(arrError, arrIteration, c='orange')
 plt.xlabel("X is error value")
 plt.ylabel("Y is number of iteration")
 plt.title("1d - Grey Wolf Optimizer 10D")
+plt.show()
+
+
+# ___2.b___
+print("2b")
+nList = [5, 10]
+mList = [0, 5]
+rList = [0.3, 0.9]
+ulList = [10, 20]
+wList = [0.01, 0.03]
+dList = [0.25, 0.5]
+
+# parameter choose:
+n = nList[0]
+m = mList[0]
+ul = ulList[0]
+r = rList[0]
+w = wList[0]
+d = dList[0]
+
+Wlist = []
+for i in range(0, 6):
+    Wlist.append(random.random() * r)
+
+miu_list = []
+variance_list = []
+
+for i in range(0, m + 1):
+    miu_list.append([np.random.uniform(-d*ul/2, d*ul/2) for i in range(n)])
+    variance_list.append([np.random.uniform(w*ul/10, w*ul) for i in range(n)])
+
+z = G(m, variance_list, miu_list)
+F = lambda x: -z(x)
+lb = [-10.02] * n
+ub = [10.02] * n
+
+# ______ Number of iterations _______
+epoch_num = 10
+
+# ______ 5D _______
+dim_n = 5
+
+# _____hc 5D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = OriginalHC(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Hill Climber 5D")
+plt.show()
+
+
+# _____SA 5D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BaseSA(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Simulated Annealing 5D")
+plt.show()
+
+
+# _____PSO 5D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BasePSO(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Particle Swarm Optimization 5D")
+plt.show()
+
+# _____EHO 5D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BaseEHO(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Elephant Herding Optimization 5D")
+plt.show()
+
+# _____WOA 5D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BaseWOA(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Whale Optimization Algorithm 5D")
+plt.show()
+
+# _____GWO 5D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BaseGWO(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Grey Wolf Optimizer 5D")
+plt.show()
+
+
+# parameter choose:
+n = nList[1]
+m = mList[1]
+ul = ulList[1]
+r = rList[1]
+w = wList[1]
+d = dList[1]
+Wlist = []
+for i in range(0, 6):
+    Wlist.append(random.random() * r)
+
+miu_list = []
+variance_list = []
+
+for i in range(0, m + 1):
+    miu_list.append([np.random.uniform(-d*ul/2, d*ul/2) for i in range(n)])
+    variance_list.append([np.random.uniform(w*ul/10, w*ul) for i in range(n)])
+
+z = G(m, variance_list, miu_list)
+F = lambda x: -z(x)
+lb = [-10.02] * n
+ub = [10.02] * n
+
+# ______ 10D _______
+dim_n = 10
+
+# _____hc 10D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = OriginalHC(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Hill Climber 10D")
+plt.show()
+
+# _____SA 10D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BaseSA(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Simulated Annealing 10D")
+plt.show()
+
+
+# _____PSO 10D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BasePSO(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Particle Swarm Optimization 10D")
+plt.show()
+
+# _____EHO 10D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BaseEHO(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Elephant Herding Optimization 10D")
+plt.show()
+
+# _____WOA 10D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BaseWOA(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Whale Optimization Algorithm 10D")
+plt.show()
+
+# _____GWO 10D______
+np.random.seed(12)
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+hc = BaseGWO(F, ub=ub, lb=lb, epoch=epoch_num, problem_size=dim_n)
+best_pos1, best_fit1, list_loss1 = hc.train()
+
+sys.stdout = old_stdout
+ResultString = mystdout.getvalue()
+arrResultString = ResultString.split("\n")
+arrZString = [arrResultString[i].split(",") for i in range(epoch_num)]
+arrZin1 = [arrZString[i][1].split(":") for i in range(epoch_num)]
+arrZ = []
+arrIteration = []
+for i in range(epoch_num):
+    arrZ.append(float(arrZin1[i][1]))
+    arrIteration.append(i)
+# plt.scatter(arrZ, arrIteration)
+# plt.show()
+
+arrError = []
+print("error:")
+for i, j in zip(list_loss1, arrZ):
+    print(min(arrZ) - i)
+    arrError.append(min(arrZ) - i)
+plt.scatter(arrError, arrIteration, c='red')
+plt.xlabel("X is error value")
+plt.ylabel("Y is number of iteration")
+plt.title("2b - Grey Wolf Optimizer 10D")
 plt.show()
