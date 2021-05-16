@@ -113,4 +113,4 @@ def q2_b(F, ub, lb, epoch_num, dim_n, r):
     mean_and_stdev(arr_mean_GWO, arr_stdev_GWO, "GWO")
     mean_and_stdev(arr_mean_EHO, arr_stdev_EHO, "EHO")
 
-    example_data()
+
