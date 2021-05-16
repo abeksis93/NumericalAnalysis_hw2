@@ -108,9 +108,6 @@ lb = [-7] * n
 ub = [6.0001] * n
 Question1D.q1_d2(F, ub, lb)
 
-
-# ___2.b___
-
 # parameter choose:
 n = nList[0]  # n == 5
 r = nList[1]  # r == 0.3
@@ -127,6 +124,7 @@ ub = [ul / 2] * n
 epoch_num = 50  # Number of iterations
 pop_size = 50  # population size
 dim_n = 5
+r = 0.3
 
 Question2B.q2_b(F, ub, lb, epoch_num, dim_n, r)
 
@@ -148,6 +146,7 @@ ub = [ul / 2] * n
 epoch_num = 50  # Number of iterations
 pop_size = 50  # population size
 dim_n = 5
+r = 0.9
 
 Question2B.q2_b(F, ub, lb, epoch_num, dim_n, r)
 
@@ -167,6 +166,7 @@ ub = [ul / 2] * n
 epoch_num = 50  # Number of iterations
 pop_size = 50  # population size
 dim_n = 10
+r = 0.3
 
 Question2B.q2_b(F, ub, lb, epoch_num, dim_n, r)
 
@@ -188,5 +188,9 @@ ub = [ul / 2] * n
 epoch_num = 50  # Number of iterations
 pop_size = 50  # population size
 dim_n = 10
+r = 0.9
 
 Question2B.q2_b(F, ub, lb, epoch_num, dim_n, r)
+
+
+

@@ -30,8 +30,9 @@ def q1_d1(F, ub, lb):
     print("error:")
     for i, j in zip(list_loss1, arrZ):
         print(min(arrZ) - i)
-        arrError.append(-1 * (min(arrZ) - i))
-    plt.scatter(arrError, arrIteration, c='red')
+        arrError.append(min(arrZ) - i)
+    all_positive_lst = [abs(num) for num in arrError]
+    plt.scatter(all_positive_lst, arrIteration, c='red')
     plt.xlabel("X is error value")
     plt.ylabel("Y is number of iteration")
     plt.title("1d - Hill Climber 10D")
@@ -64,7 +65,8 @@ def q1_d2(F, ub, lb):
     for i, j in zip(list_loss1, arrZ):
         print(min(arrZ) - i)
         arrError.append(min(arrZ) - i)
-    plt.scatter(arrError, arrIteration, c='orange')
+    all_positive_lst = [abs(num) for num in arrError]
+    plt.scatter(all_positive_lst, arrIteration, c='orange')
     plt.xlabel("X is error value")
     plt.ylabel("Y is number of iteration")
     plt.title("1d - Grey Wolf Optimizer 10D")

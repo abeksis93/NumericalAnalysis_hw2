@@ -11,9 +11,11 @@ from mealpy.swarm_based.GWO import BaseGWO
 from mealpy.swarm_based.PSO import BasePSO
 from mealpy.swarm_based.WOA import BaseWOA
 
+from RadarCharts import radar_factory, example_data
+
 
 def mean_and_stdev(arr_mean, arr_stdev, algorithm_name):
-    print("algorithm: {0}\n", algorithm_name)
+    print("algorithm: {0}\n".format(algorithm_name))
     print("mean: {0}\n".format(statistics.mean(arr_mean)))
     print("stdev: {0}\n".format(statistics.stdev(arr_stdev)))
 
@@ -33,8 +35,8 @@ def q2_b(F, ub, lb, epoch_num, dim_n, r):
     arr_stdev_WOA = []
     arr_stdev_GWO = []
     arr_stdev_HS = []
+    np.random.seed(12)
     for i in range(10):
-        np.random.seed(12)
         print("\nseed {0}\n".format(i))
         print("r equals {0}\n".format(r))
 
@@ -110,3 +112,5 @@ def q2_b(F, ub, lb, epoch_num, dim_n, r):
     mean_and_stdev(arr_mean_HS, arr_stdev_HS, "HS")
     mean_and_stdev(arr_mean_GWO, arr_stdev_GWO, "GWO")
     mean_and_stdev(arr_mean_EHO, arr_stdev_EHO, "EHO")
+
+    example_data()

@@ -27,7 +27,8 @@ def q1_b(F, ub, lb):
     for i in range(10):
         arr_z.append(float(arr_zin1[i][1]))
         arr_iteration.append(i)
-    plt.scatter(arr_z, arr_iteration, c='purple')
+    all_positive_lst = [abs(num) for num in arr_z]
+    plt.scatter(all_positive_lst, arr_iteration, c='purple')
     plt.xlabel("X is best fit value")
     plt.ylabel("Y is number of iteration")
     plt.title("1b - Hill Climber 2D")
